@@ -1,0 +1,56 @@
+body{
+    background: #E6E6E8;
+}
+
+datepicker{
+    display: inline-block;
+    position: relative;
+    width: 200px;
+}
+
+.datepicker-date{
+    color: gray;
+    font-size: 10pt;
+    display: inline-block;
+    padding: 10px 10px 7px 10px;
+    background: white;
+    cursor: pointer;
+    -webkit-user-select: none;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.datepicker-popup{
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: #323439;
+    color: white;
+    width: 100%;
+    margin-top: 35px;
+}
+
+.datepicker-top_bar{
+    width: 100%;
+    background: #5A5B5F;
+    min-height: 34px;
+}
+
+.datepicker-button{
+    display: inline-block;
+    font-size: 20pt;
+    margin: 0 5px;
+    font-family: monospace;
+    color: lightgray;
+    position: absolute;
+    cursor: pointer;
+    -webkit-user-select: none;
+}
+
+.datepicker-button_left{
+    left: 0px;
+}
+
+.datepicker-button_right{
+    right: 0px;
+}
