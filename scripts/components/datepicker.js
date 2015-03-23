@@ -38,13 +38,6 @@
                 element.removeEventListener('click', this.stopPropagation);
             });
         },
-        template:
-            '<div class="datepicker-date" data-bind="text: view, click: onDateBarClick"></div>'
-            + '<div class="datepicker-popup" data-bind="visible: isOpened">'
-            + '<div class="datepicker-top_bar">'
-            + '<div class="datepicker-button datepicker-button_left"><</div>'
-            + '<div class="datepicker-button datepicker-button_right">></div>'
-            + '</div>'
-            + '</div>'
+        template: window.document.querySelector('#datepicker-template').innerText
     });
 })(window, ko);

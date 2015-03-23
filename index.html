@@ -7,6 +7,16 @@
     <body>
         <datepicker params="value: date, element: $element"></datepicker>
 
+        <script type="text/html" id="datepicker-template">
+            <div class="datepicker-date" data-bind="text: view, click: onDateBarClick"></div>
+            <div class="datepicker-popup" data-bind="visible: isOpened">
+                <div class="datepicker-top_bar">
+                    <div class="datepicker-button datepicker-button_left"><</div>
+                    <div class="datepicker-button datepicker-button_right">></div>
+                </div>
+            </div>
+        </script>
+
         <script type="text/javascript" src="scripts/components/datepicker.js"></script>
         <script type="text/javascript" src="scripts/app.js"></script>
     </body>
