@@ -14,6 +14,9 @@
                     <div class="datepicker-button datepicker-button_left"><</div>
                     <div class="datepicker-button datepicker-button_right">></div>
                 </div>
+                <div class="datepicker-bottom_body" data-bind="foreach: calendarData">
+                    <span class="datepicker-day" data-bind="text: day, css:{ muted: isOtherMonth }"></span>
+                </div>
             </div>
         </script>
 

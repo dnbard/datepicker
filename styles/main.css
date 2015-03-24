@@ -5,7 +5,7 @@ body{
 datepicker{
     display: inline-block;
     position: relative;
-    width: 200px;
+    width: 275px;
 }
 
 .datepicker-date{
@@ -53,4 +53,20 @@ datepicker{
 
 .datepicker-button_right{
     right: 0px;
+}
+
+.datepicker-bottom_body {
+    padding: 20px 12px;
+}
+
+.datepicker-day{
+    display: inline-block;
+    width: 12.28%;
+    text-align: center;
+    color: #A6A7A9;
+    font-size: 13px;
+}
+
+.datepicker-day.muted{
+    color: #5A5B5F;
 }

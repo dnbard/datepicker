@@ -25,8 +25,51 @@
                     document.removeEventListener('click', this.onDateBarClick);
                 }
 
+                this.calendarData(this.fillDateView(this.value()));
+
                 if (event){ event.stopPropagation(); }
             }.bind(this);
+
+            this.daysInMonth = function(date){
+                return new Date(date.getYear(), date.getMonth(), 0).getDate();
+            }
+
+            this.fillDateView = function(argumentDate){
+                var date = new Date(argumentDate);
+
+                date.setDate(0);
+
+                var dateDay = date.getDay(),
+                    dateMonth = argumentDate.getMonth(),
+                    daysInMonth = this.daysInMonth(date),
+                    lastDayInMonth = new Date(date),
+                    daysOverhead,
+                    elements = [];
+
+                lastDayInMonth.setDate(daysInMonth);
+                daysOverhead = 7 - lastDayInMonth.getDay();
+
+                dateDay = dateDay > 0 ? -dateDay : 0;
+                date.setDate(date.getDate() + dateDay);
+
+                for(var i = dateDay, max = daysInMonth + daysOverhead; i < max; i++){
+                    date.setDate(date.getDate() + 1);
+
+                    var currentDate = new Date(date);
+
+                    elements.push({
+                        date: currentDate,
+                        day: currentDate.getDate(),
+                        isOtherMonth : dateMonth !== currentDate.getMonth()
+                    });
+
+                    console.log('Check month %s of %s', dateMonth, currentDate.getMonth());
+                }
+
+                return elements;
+            }
+
+            this.calendarData = ko.observableArray(this.fillDateView(this.value()));
 
             this.stopPropagation = function(event){
                 event.stopPropagation();
