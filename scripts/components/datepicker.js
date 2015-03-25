@@ -1,15 +1,40 @@
 (function(window, ko){
-    var Months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'November', 'December'];
+    var Months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+        SetTypes = {
+            DAYS: 'days',
+            MONTHS: 'months',
+            YEARS: 'years'
+        },
+        Sets = [{
+            type: SetTypes.DAYS,
+            index: 0
+        },{
+            type: SetTypes.MONTHS,
+            index: 1
+        },{
+            type: SetTypes.YEARS,
+            index: 2
+        }];
 
     ko.components.register('datepicker', {
         viewModel: function(params){
             element = params.element;
 
             this.value = params.value;
+            this.set = ko.observable(Sets[0]);
+            this.set.subscribe(function(newSet){
+                this.calendarData(this.getViewHandlerBySet(newSet)(this.value()));
+            }.bind(this));
 
-            this.getDateString = function(date){
+            this.getDateString = function(date, set){
+                set = set || Sets[0];
+
                 try{
-                    return Months[date.getMonth()] + ' ' + date.getDate() + ', ' + date.getFullYear();
+                    if (set.type === SetTypes.DAYS){
+                        return Months[date.getMonth()] + ' ' + date.getDate() + ', ' + date.getFullYear();
+                    } else if (set.type === SetTypes.MONTHS){
+                        return date.getFullYear();
+                    }
                 }
                 catch(e){
                     return 'Invalid Date';
@@ -17,7 +42,8 @@
             }
 
             this.view = ko.computed(function(){
-                var date = this.value();
+                var date = this.value(),
+                    set = this.set();
 
                 if (!date){
                     return 'Select Date';
@@ -28,7 +54,17 @@
 
             this.isOpened = ko.observable(false);
 
+            this.isDaysSet = function(set){
+                return set() === Sets[0];
+            }.bind(this);
+
+            this.isMonthsSet = function(set){
+                return set() === Sets[1];
+            }.bind(this);
+
             this.onDateBarClick = function(viewmodel, event){
+                this.set(Sets[0]);
+
                 var newState = !this.isOpened();
                 this.isOpened(newState);
 
@@ -44,8 +80,37 @@
             }.bind(this);
 
             this.daysInMonth = function(date){
-                return new Date(date.getYear(), date.getMonth(), 0).getDate();
+                return new Date(date.getFullYear(), date.getMonth(), 0).getDate();
             }
+
+            this.getViewHandlerBySet = function(set){
+                if(set.type === SetTypes.DAYS){
+                    return this.fillDateView;
+                } else if(set.type === SetTypes.MONTHS){
+                    return this.fillMonthView;
+                }
+            }.bind(this);
+
+            this.fillMonthView = function(argumentDate){
+                var date = new Date(argumentDate),
+                    day = date.getDate(),
+                    year = date.getFullYear(),
+                    elements = [],
+                    currDate, maxDays;
+
+                for(var i = 0; i < 12; i ++){
+                    currDate = new Date(year, i + 1, 1);
+                    maxDays = this.daysInMonth(currDate);
+
+                    elements.push({
+                        date: day > maxDays ? new Date(year, i, maxDays) : new Date(year, i, day),
+                        caption: Months[i],
+                        isOtherMonth: false
+                    });
+                }
+
+                return elements;
+            }.bind(this);
 
             this.fillDateView = function(argumentDate){
                 var date = new Date(argumentDate);
@@ -56,8 +121,8 @@
                     dateMonth = argumentDate.getMonth(),
                     daysInMonth = this.daysInMonth(date),
                     lastDayInMonth = new Date(argumentDate),
-                    daysOverhead,
-                    elements = [];
+                    elements = [],
+                    daysOverhead;
 
                 lastDayInMonth.setDate(daysInMonth - 1);
                 daysOverhead = 6 - lastDayInMonth.getDay();
@@ -78,7 +143,7 @@
                 }
 
                 return elements;
-            }
+            }.bind(this);
 
             this.calendarData = ko.observableArray(this.fillDateView(this.value()));
 
@@ -92,16 +157,53 @@
 
                 return currentDate.getDate() === date.getDate() &&
                     currentDate.getMonth() === date.getMonth() &&
-                    currentDate.getYear() === date.getYear();
+                    currentDate.getFullYear() === date.getFullYear();
+            }
+
+            this.isMonthSelected = function(data){
+                var currentDate = this.value(),
+                    date = data.date;
+
+                if (!currentDate || !date){
+                    return false;
+                }
+
+                return currentDate.getMonth() === date.getMonth() &&
+                    currentDate.getFullYear() === date.getFullYear();
             }
 
             this.onDayClick = function(data){
+                var isMonthChanged = this.value().getMonth() !== data.date.getMonth();
+
                 this.value(data.date);
+                if (isMonthChanged){
+                    this.set.valueHasMutated();
+                }
+            }.bind(this);
+
+            this.onMonthClick = function(data){
+                this.value(data.date);
+                this.set(Sets.filter(function(set){
+                    return set.type === SetTypes.DAYS;
+                })[0]);
             }.bind(this);
 
             this.onSetToday = function(){
                 this.value(new Date());
-                //TODO: move datepicker view to DAYS with current month selected
+                this.set(Sets[0]);
+            }.bind(this);
+
+            this.onRightClick = function(viewmodel, event){
+                var set = this.set(),
+                    setsMaxIndex = Sets.reduce(function(maxSet, set){
+                        return maxSet.index < set.index ? set : maxSet;
+                    }).index;
+
+                if (set.index < setsMaxIndex){
+                    this.set(Sets.filter(function(newSet){
+                        return newSet.index === set.index + 1;
+                    })[0]);
+                }
             }.bind(this);
 
             this.stopPropagation = function(event){
@@ -112,7 +214,7 @@
             ko.utils.domNodeDisposal.addDisposeCallback(element, function(){
                 document.removeEventListener('click', this.onDateBarClick);
                 element.removeEventListener('click', this.stopPropagation);
-            });
+            }.bind(this));
         },
         template: window.document.querySelector('#datepicker-template').innerText
     });
