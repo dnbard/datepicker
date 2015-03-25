@@ -65,8 +65,17 @@ datepicker{
     text-align: center;
     color: #A6A7A9;
     font-size: 13px;
+    cursor: pointer;
+    -webkit-user-select: none;
+    transition: 0.25s ease-out background, 0.25s ease-out color;
+    border-radius: 25%;
 }
 
 .datepicker-day.muted{
     color: #5A5B5F;
+}
+
+.datepicker-day.selected{
+    background: #DA4D48;
+    color: white;
 }

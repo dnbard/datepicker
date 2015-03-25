@@ -71,6 +71,23 @@
 
             this.calendarData = ko.observableArray(this.fillDateView(this.value()));
 
+            this.isSelected = function(data){
+                var currentDate = this.value(),
+                    date = data.date;
+
+                if (!currentDate || !date){
+                    return false;
+                }
+
+                return currentDate.getDate() === date.getDate() &&
+                    currentDate.getMonth() === date.getMonth() &&
+                    currentDate.getYear() === date.getYear();
+            }
+
+            this.onDayClick = function(data){
+                this.value(data.date);
+            }.bind(this);
+
             this.stopPropagation = function(event){
                 event.stopPropagation();
             }
