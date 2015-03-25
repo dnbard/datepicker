@@ -36,6 +36,12 @@ datepicker{
     min-height: 34px;
 }
 
+.datepicker-top_bar .datepicker-date{
+    background: transparent;
+    text-align: center;
+    color: lightgray;
+}
+
 .datepicker-button{
     display: inline-block;
     font-size: 20pt;
@@ -55,8 +61,13 @@ datepicker{
     right: 0px;
 }
 
-.datepicker-bottom_body {
+.datepicker-body {
     padding: 20px 12px;
+}
+
+.datepicker-bottom_bar {
+    padding: 0 0 12px 0;
+    text-align: center;
 }
 
 .datepicker-day{
@@ -77,5 +88,19 @@ datepicker{
 
 .datepicker-day.selected{
     background: #DA4D48;
+    color: white;
+}
+
+.datepicker-today{
+    border: none;
+    background: #282A2D;
+    color: gray;
+    padding: 4px 16px;
+    border-radius: 6px;
+    transition: 0.25s ease-out color;
+    cursor: pointer;
+}
+
+.datepicker-today:hover{
     color: white;
 }

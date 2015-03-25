@@ -13,9 +13,13 @@
                 <div class="datepicker-top_bar">
                     <div class="datepicker-button datepicker-button_left"><</div>
                     <div class="datepicker-button datepicker-button_right">></div>
+                    <div class="datepicker-date" data-bind="text: getDateString(value())"></div>
                 </div>
-                <div class="datepicker-bottom_body" data-bind="foreach: calendarData">
-                    <span class="datepicker-day" data-bind="text: day, css:{ muted: isOtherMonth, selected: $parent.isSelected($data) }, click: $parent.onDayClick"></span>
+                <div class="datepicker-body" data-bind="foreach: calendarData">
+                    <span class="datepicker-day" data-bind="text: caption, css:{ muted: isOtherMonth, selected: $parent.isSelected($data) }, click: $parent.onDayClick"></span>
+                </div>
+                <div class="datepicker-bottom_bar">
+                    <button class="datepicker-today" data-bind="click: onSetToday">Today</button>
                 </div>
             </div>
         </script>

@@ -1,16 +1,29 @@
 (function(window, ko){
+    var Months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'November', 'December'];
+
     ko.components.register('datepicker', {
         viewModel: function(params){
             element = params.element;
 
             this.value = params.value;
 
+            this.getDateString = function(date){
+                try{
+                    return Months[date.getMonth()] + ' ' + date.getDate() + ', ' + date.getFullYear();
+                }
+                catch(e){
+                    return 'Invalid Date';
+                }
+            }
+
             this.view = ko.computed(function(){
-                if (!this.value()){
+                var date = this.value();
+
+                if (!date){
                     return 'Select Date';
                 }
 
-                return 'Format Me';
+                return this.getDateString(date);
             }, this);
 
             this.isOpened = ko.observable(false);
@@ -59,7 +72,7 @@
 
                     elements.push({
                         date: currentDate,
-                        day: currentDate.getDate(),
+                        caption: currentDate.getDate(),
                         isOtherMonth : dateMonth !== currentDate.getMonth()
                     });
                 }
@@ -84,6 +97,11 @@
 
             this.onDayClick = function(data){
                 this.value(data.date);
+            }.bind(this);
+
+            this.onSetToday = function(){
+                this.value(new Date());
+                //TODO: move datepicker view to DAYS with current month selected
             }.bind(this);
 
             this.stopPropagation = function(event){
