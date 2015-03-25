@@ -42,12 +42,12 @@
                 var dateDay = date.getDay(),
                     dateMonth = argumentDate.getMonth(),
                     daysInMonth = this.daysInMonth(date),
-                    lastDayInMonth = new Date(date),
+                    lastDayInMonth = new Date(argumentDate),
                     daysOverhead,
                     elements = [];
 
-                lastDayInMonth.setDate(daysInMonth);
-                daysOverhead = 7 - lastDayInMonth.getDay();
+                lastDayInMonth.setDate(daysInMonth - 1);
+                daysOverhead = 6 - lastDayInMonth.getDay();
 
                 dateDay = dateDay > 0 ? -dateDay : 0;
                 date.setDate(date.getDate() + dateDay);
@@ -62,8 +62,6 @@
                         day: currentDate.getDate(),
                         isOtherMonth : dateMonth !== currentDate.getMonth()
                     });
-
-                    console.log('Check month %s of %s', dateMonth, currentDate.getMonth());
                 }
 
                 return elements;
