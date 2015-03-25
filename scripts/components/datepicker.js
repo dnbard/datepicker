@@ -1,5 +1,6 @@
 (function(window, ko){
     var Months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+        Days = ['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU'],
         SetTypes = {
             DAYS: 'days',
             MONTHS: 'months',
@@ -22,6 +23,7 @@
 
             this.value = params.value;
             this.displayValue = new Date(this.value());
+            this.days = Days;
 
             this.set = ko.observable(Sets[0]);
             this.set.subscribe(function(newSet){
