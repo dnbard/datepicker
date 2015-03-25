@@ -21,12 +21,19 @@
             element = params.element;
 
             this.value = params.value;
+            this.displayValue = new Date(this.value());
+
             this.set = ko.observable(Sets[0]);
             this.set.subscribe(function(newSet){
                 this.calendarData(this.getViewHandlerBySet(newSet)(this.value()));
+                this.displayValue = new Date(this.value());
             }.bind(this));
 
+            this.yearRange = ko.observable(null);
+
             this.getDateString = function(date, set){
+                var yearRange = this.yearRange();
+
                 set = set || Sets[0];
 
                 try{
@@ -34,12 +41,14 @@
                         return Months[date.getMonth()] + ' ' + date.getDate() + ', ' + date.getFullYear();
                     } else if (set.type === SetTypes.MONTHS){
                         return date.getFullYear();
+                    } else if (set.type === SetTypes.YEARS){
+                        return yearRange.start + ' - ' + yearRange.finish;
                     }
                 }
                 catch(e){
                     return 'Invalid Date';
                 }
-            }
+            }.bind(this);
 
             this.view = ko.computed(function(){
                 var date = this.value(),
@@ -60,6 +69,10 @@
 
             this.isMonthsSet = function(set){
                 return set() === Sets[1];
+            }.bind(this);
+
+            this.isYearsSet = function(set){
+                return set() === Sets[2];
             }.bind(this);
 
             this.onDateBarClick = function(viewmodel, event){
@@ -88,7 +101,34 @@
                     return this.fillDateView;
                 } else if(set.type === SetTypes.MONTHS){
                     return this.fillMonthView;
+                } else if (set.type === SetTypes.YEARS){
+                    return this.fillYearsView;
                 }
+
+                throw new Error('No view handler provided for %s', set);
+            }.bind(this);
+
+            this.fillYearsView = function(argumentDate){
+                var date = new Date(argumentDate),
+                    year = date.getFullYear(),
+                    startYear = Math.floor( year / 10 ) * 10 - 1,
+                    finishYear = Math.floor( year / 10 ) * 10 + 10,
+                    elements = [];
+
+                this.yearRange({
+                    start: startYear,
+                    finish: finishYear
+                });
+
+                for(year = startYear; year <= finishYear; year ++){
+                    elements.push({
+                        date: new Date(year, 0, 1),
+                        caption: year,
+                        muted: year === startYear || year === finishYear
+                    });
+                }
+
+                return elements;
             }.bind(this);
 
             this.fillMonthView = function(argumentDate){
@@ -105,7 +145,7 @@
                     elements.push({
                         date: day > maxDays ? new Date(year, i, maxDays) : new Date(year, i, day),
                         caption: Months[i],
-                        isOtherMonth: false
+                        muted: false
                     });
                 }
 
@@ -138,7 +178,7 @@
                     elements.push({
                         date: currentDate,
                         caption: currentDate.getDate(),
-                        isOtherMonth : dateMonth !== currentDate.getMonth()
+                        muted : dateMonth !== currentDate.getMonth()
                     });
                 }
 
@@ -158,6 +198,17 @@
                 return currentDate.getDate() === date.getDate() &&
                     currentDate.getMonth() === date.getMonth() &&
                     currentDate.getFullYear() === date.getFullYear();
+            }
+
+            this.isYearSelected = function(data){
+                var currentDate = this.value(),
+                    date = data.date;
+
+                if (!currentDate || !date){
+                    return false;
+                }
+
+                return currentDate.getFullYear() === date.getFullYear();
             }
 
             this.isMonthSelected = function(data){
@@ -188,6 +239,13 @@
                 })[0]);
             }.bind(this);
 
+            this.onYearClick = function(data){
+                this.value(data.date);
+                this.set(Sets.filter(function(set){
+                    return set.type === SetTypes.MONTHS;
+                })[0]);
+            }.bind(this);
+
             this.onSetToday = function(){
                 this.value(new Date());
                 this.set(Sets[0]);
@@ -205,6 +263,38 @@
                     })[0]);
                 }
             }.bind(this);
+
+            this.onPreviousPage = function(){
+                var set = this.set(),
+                    date = this.value();
+
+                if (set.type === SetTypes.DAYS){
+                    this.displayValue.setDate(this.displayValue.getDate() - 30);
+                    this.calendarData(this.getViewHandlerBySet(this.set())(this.displayValue));
+                } else if (set.type === SetTypes.MONTHS){
+                    date.setFullYear(date.getFullYear() - 1);
+                    this.set.valueHasMutated();
+                } else if (set.type === SetTypes.YEARS){
+                    date.setFullYear(date.getFullYear() - 10);
+                    this.set.valueHasMutated();
+                }
+            }
+
+            this.onNextPage = function(){
+                var set = this.set(),
+                    date = this.value();
+
+                if (set.type === SetTypes.DAYS){
+                    this.displayValue.setDate(this.displayValue.getDate() + 30);
+                    this.calendarData(this.getViewHandlerBySet(this.set())(this.displayValue));
+                } else if (set.type === SetTypes.MONTHS){
+                    date.setFullYear(date.getFullYear() + 1);
+                    this.set.valueHasMutated();
+                } else if (set.type === SetTypes.YEARS){
+                    date.setFullYear(date.getFullYear() + 10);
+                    this.set.valueHasMutated();
+                }
+            }
 
             this.stopPropagation = function(event){
                 event.stopPropagation();

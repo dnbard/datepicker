@@ -70,7 +70,7 @@ datepicker{
     text-align: center;
 }
 
-.datepicker-day, .datepicker-month{
+.datepicker-day, .datepicker-month, .datepicker-year{
     display: inline-block;
     width: 12.28%;
     text-align: center;
@@ -82,16 +82,16 @@ datepicker{
     border-radius: 25%;
 }
 
-.datepicker-day.muted, .datepicker-month.muted{
+.datepicker-day.muted, .datepicker-month.muted, .datepicker-year.muted{
     color: #5A5B5F;
 }
 
-.datepicker-day.selected, .datepicker-month.selected{
+.datepicker-day.selected, .datepicker-month.selected, .datepicker-year.selected{
     background: #DA4D48;
     color: white;
 }
 
-.datepicker-month{
+.datepicker-month, .datepicker-year{
     width: 32%;
     padding: 4px 0;
 }
