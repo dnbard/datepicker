@@ -18,7 +18,7 @@ Apply script and stylesheet to your HTML page:
 
 Binding:
 ```html
-<datepicker params="value: date"></datepicker>
+<datepicker params="value: date, element: $element"></datepicker>
 ```
 
 ViewModel:
