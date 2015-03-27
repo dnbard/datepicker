@@ -308,6 +308,6 @@
                 element.removeEventListener('click', this.stopPropagation);
             }.bind(this));
         },
-        template: window.document.querySelector('#datepicker-template').innerText
+        template: %%TEMPLATE%%
     });
 })(window, ko);

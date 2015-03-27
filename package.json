@@ -1,0 +1,23 @@
+{
+  "name": "datepicker",
+  "version": "1.0.0",
+  "description": "Datepicker component for KnockoutJS",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dnbard/datepicker"
+  },
+  "author": "Alex Bardanov",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dnbard/datepicker/issues"
+  },
+  "homepage": "http://dnbard.github.io/datepicker/",
+  "devDependencies": {
+    "gulp": "^3.8.11",
+    "gulp-replace": "^0.5.3"
+  }
+}

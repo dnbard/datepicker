@@ -12,8 +12,8 @@ Documentation
 
 Apply script and stylesheet to your HTML page:
 ```html
-<link rel="stylesheet" href="styles/datepicker.css">
-<script type="text/javascript" src="scripts/components/datepicker.js"></script>
+<link rel="stylesheet" href="dist/datepicker.css">
+<script type="text/javascript" src="dist/datepicker.js"></script>
 ```
 
 Binding:
