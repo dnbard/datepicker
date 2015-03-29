@@ -1,7 +1,6 @@
 var gulp = require('gulp'),
     fs = require('fs'),
     replace = require('gulp-replace'),
-    minify = require('html-minifier').minify,
     paths = {
         script: './src/datepicker.js',
         template: './src/template.html',
@@ -16,7 +15,9 @@ gulp.task('default', ['script-datepicker', 'styles-datepicker'], function() {
 });
 
 gulp.task('script-datepicker', function(){
-    var template = fs.readFileSync(paths.template, { encoding: 'UTF-8' }).replace(/\r?\n|\r/g, '');
+    var template = fs.readFileSync(paths.template, { encoding: 'UTF-8' })
+        .replace(/\r?\n|\r/g, '')
+        .replace(/\s\s/g, '');
 
     gulp.src(paths.script)
         .pipe(replace(/%%TEMPLATE%%/g, '\'' + template + '\''))
